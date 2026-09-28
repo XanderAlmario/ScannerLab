@@ -4,6 +4,7 @@
 #include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "scan.h"
 
 void parseerror(char *message)
@@ -35,33 +36,22 @@ int main(int argc, char** argv)
       t = gettoken();
       while (t.id == TokenPlus || t.id == TokenMinus || t.id == TokenDivide)
       {
-
-         switch (t.id) 
-         {
-            case TokenPlus:
-               op = 11;
-               break;
-            case TokenMinus:
-               op = 12;
-               break;
-            case TokenDivide:
-               op = 13;
-               break;
-         }
-
+         op = t.id;
          t = gettoken();
 
          if (t.id != TokenNumber)
             parseerror("Number expected");
          printf("%s\n",t.lexeme);
          sscanf(t.lexeme,"%d",&number);
-         if (op == 11) result += number;
+         if (op == 3) result *= number;
+         else if (op == 11) result += number;
          else if (op == 12) result -= number;
          else if (op == 13)
          {
             if (number != 0) result /= number;
-            else parseerror("cannot divide by 0");
+            else if (number == 0) parseerror("cannot divide by 0");
          }
+         else if (op == 15) result = pow(result, number);
          t = gettoken();
       }
       if (t.id != TokenEquals)

@@ -18,21 +18,33 @@
 #define DIVIDE       7
 #define EQUAL        8
 #define EOFCHAR      9
+#define MULTIPLY    10
+#define COLON       11
+#define LT          12
+#define GT          13
+#define NotEqual    14
+#define QUOTE       15
+#define UNDERSCORE  16
+#define LETTER      17
+#define SEMICOLON   18
+#define COMMA       19
+#define LEFTPAREN   20
+#define RIGHTPAREN  21       
     
 /* state transition table */
-int delta[][10] = {
+int delta[][22] = {
                 
-    /*          0,  1,  2,  3,  4,  5,  6,  7,  8,  9*/
-    /*  0 */ {  1,  0,  0,  0, 41, 11, 12, 13, 16, 19},
-    /*  1 */ {  1, 31, 31, 31, 31, 31, 31, 31, 31, 31}
-    // /*  2 */ { 42, 42, 42, 42, 42, 13, 42, 42, 42,  0},
-    ///*  3 */ {   }
-    ///*  4 */ {   }
-    ///*  5 */ {   }
-    ///*  6 */ {   }
-    ///*  7 */ {   }
-    ///*  8 */ {   }
-
+    /*          0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21*/
+    /*  0 */ {  1,  0,  0,  0, 41, 11, 12, 13, 16, 19,  2,  3,  4,  5,  6,  7,  8,  8, 21, 22, 24, 25 },
+    /*  1 */ {  1, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31 },
+    /*  2 */ { 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 15, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33 },
+    /*  3 */ { 32, 32, 32, 32, 32, 32, 32, 32, 23, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32 },
+    /*  4 */ { 34, 34, 34, 34, 34, 34, 34, 34, 14, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34 },
+    /*  5 */ { 35, 35, 35, 35, 35, 35, 35, 35, 17, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35 },
+    /*  6 */ { 42, 42, 42, 42, 42, 42, 42, 42, 18, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42 },
+    /*  7 */ {  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  9,  7,  7,  7,  7,  7,  7 },
+    /*  8 */ {  8, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,  8,  8, 37, 37, 37, 37 },
+    /*  9 */ { 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36 }
 };
 
 #define MAXLINELEN 1000
@@ -82,6 +94,8 @@ int charclass(char c)
 {
     if ((c>='0') && (c<='9'))
         return DIGIT;
+    else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+        return LETTER;
     switch(c)
     {
         case  '+': return PLUS;
@@ -91,14 +105,19 @@ int charclass(char c)
         case '\t': return TAB;
         case  EOF: return EOFCHAR;
         case  '=': return EQUAL;
-        case '-': return MINUS;
-        case '/': return DIVIDE;
-        // case '*': return MULTIPLY;
-        // case '**': return RAISE;
-        // case ',': return COMMA;
-        // case ';': return SEMICOLON;
-        // case ':=': return ASSIGN;
-        // case '<=': return LTEQUAL;
+        case '-' : return MINUS;
+        case '/' : return DIVIDE;
+        case '*' : return MULTIPLY;
+        case ':' : return COLON;
+        case '<' : return LT;
+        case '>' : return GT;
+        case '!' : return NotEqual;
+        case '"' : return QUOTE;
+        case '_' : return UNDERSCORE;
+        case ';' : return SEMICOLON;
+        case ',' : return COMMA;
+        case '(' : return LEFTPAREN;
+        case ')' : return RIGHTPAREN;
         default  : return OTHER;
     }
 }
@@ -108,7 +127,7 @@ const char *errormessage(int errnum)
     switch(errnum)
     {
         case 41: return "Illegal character";
-        case 42: return "Use two equal signs";
+        case 42: return "Unkown token";
         default: return "Unspecified error";
     }
 }
@@ -120,7 +139,7 @@ struct token gettoken()
 
     strcpy(temp.lexeme,"");
     char placeholder[] = {'.','\0'}; /* single character string */
-    while (state < 3)
+    while (state < 10)
     {
         char c = mygetchar();
         placeholder[0] = c;
@@ -139,14 +158,14 @@ struct token gettoken()
         temp.id = 0; /* error token */
         strcpy(temp.lexeme,"");
     }
-    else if (state >= 30) /* 20 plus means valid token with pushback */
+    else if (state >= 30) /* 30 plus means valid token with pushback */
     {
         temp.id = state % 10;
         pushback = TRUE;
     }
     else if (state >= 10) /* 10 plus means valid token with NO pushback */
     {
-        // temp.id = state % 10;
+        temp.id = state;
         pushback = FALSE;
     }
     

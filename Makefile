@@ -24,7 +24,6 @@ clean:
 
 test1: test1.txt
 	./scanit.exe test1.txt
-	./compute.exe test1.txt
 
 test2: test2.txt
 	./scanit.exe test2.txt
