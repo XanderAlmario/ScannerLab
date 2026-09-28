@@ -27,6 +27,6 @@ const char *tokennames[] =
        "Semicolon", //21
        "Comma", //22
        "Assign", //23
-       "Left Parenthesis", //24
-       "Right Parenthesis", //25
+       "LeftParen", //24
+       "RightParen", //25
 };
