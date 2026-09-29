@@ -17,10 +17,10 @@ const char *tokennames[] =
        "Plus  ", //11
        "Minus ", //12
        "Divide", //13
-       "Less Than or Equal", //14
+       "LTEqual", //14
        "Raise", //15
        "Equals", //16
-       "Greater Than or Equal", //17
+       "GTEqual", //17
        "Not Equal", //18
        "",
        "",
