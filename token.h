@@ -26,3 +26,17 @@ extern const char *tokennames[]; /* contains token names for each token below */
 #define TokenNE			 18
 #define TokenEndOfFile	 19
 #define TokenAssign 	 23
+
+#define TokenSemicolon	 21
+#define TokenComma		 22
+#define TokenLeftParen	 24
+#define TokenRightParen	 25
+
+#define TokenPrint 		 26
+#define TokenIf			 27
+#define TokenElse 		 28
+#define TokenEndif		 29
+#define TokenSqrt		 30
+#define TokenAnd		 31
+#define TokenOr			 32
+#define TokenNot		 33
