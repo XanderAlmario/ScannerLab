@@ -32,7 +32,7 @@ int main(int argc, char** argv)
          }
          if (notKeyword) printf("%s %s\n", tokennames[t.id], t.lexeme);
       }
-      else printf("%s %s\n", tokennames[t.id], t.lexeme);
+      else if (t.id != 13) printf("%s %s\n", tokennames[t.id], t.lexeme);
       t = gettoken();
    }
    return 0;

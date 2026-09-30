@@ -11,12 +11,12 @@ const char *tokennames[] =
        "Greater Than", //5
        "String", //6
        "Identifier", //7
-       "",
+       "Divide",
        "",
        "",
        "Plus  ", //11
        "Minus ", //12
-       "Divide", //13
+       "Comment", //13
        "LTEqual", //14
        "Raise", //15
        "Equals", //16
